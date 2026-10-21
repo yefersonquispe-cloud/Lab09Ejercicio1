@@ -53,7 +53,7 @@ fun ProductListScreen(
                         Column(Modifier.padding(bottom = 4.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
                             Text("Descubre el catálogo", style = MaterialTheme.typography.headlineSmall,
                                 fontWeight = FontWeight.Bold)
-                            Text("${state.data.size} productos",
+                            Text("${state.data.size} productos · Precios en USD",
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant)
                         }
@@ -75,11 +75,13 @@ private fun ProductCard(product: ProductModel, onClick: () -> Unit) {
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
     ) {
+        ProductImage(product.thumbnail, product.title, Modifier.fillMaxWidth().height(156.dp))
         Column(Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
             Text(product.category.categoryLabel(), style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.primary, maxLines = 1, overflow = TextOverflow.Ellipsis)
             Text(product.title, style = MaterialTheme.typography.titleSmall, minLines = 2,
                 maxLines = 2, overflow = TextOverflow.Ellipsis)
+            Text(product.price.usd(), style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically) {
                 Row(horizontalArrangement = Arrangement.spacedBy(4.dp), verticalAlignment = Alignment.CenterVertically) {

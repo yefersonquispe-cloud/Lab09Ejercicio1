@@ -24,12 +24,38 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import coil3.compose.AsyncImage
 import java.text.NumberFormat
 import java.util.Locale
 
 internal fun Double.usd(): String = NumberFormat.getCurrencyInstance(Locale.US).format(this)
 internal fun Double.displayNumber(): String = String.format(Locale.US, "%.1f", this)
 internal fun String.categoryLabel(): String = replace('-', ' ').replaceFirstChar { it.titlecase() }
+
+@Composable
+internal fun ProductImage(url: String?, title: String, modifier: Modifier = Modifier) {
+    var loading by remember(url) { mutableStateOf(true) }
+    var failed by remember(url) { mutableStateOf(false) }
+    Box(modifier.background(MaterialTheme.colorScheme.surfaceVariant), contentAlignment = Alignment.Center) {
+        AsyncImage(
+            model = url,
+            contentDescription = title,
+            modifier = Modifier.fillMaxSize().padding(12.dp),
+            contentScale = ContentScale.Fit,
+            onLoading = { loading = true; failed = false },
+            onSuccess = { loading = false; failed = false },
+            onError = { loading = false; failed = true }
+        )
+        if (loading) CircularProgressIndicator(modifier = Modifier.size(24.dp), strokeWidth = 2.dp)
+        if (failed) {
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Icon(Icons.Default.ShoppingCart, null, Modifier.size(32.dp))
+                Text("Imagen no disponible", style = MaterialTheme.typography.labelSmall,
+                    textAlign = TextAlign.Center)
+            }
+        }
+    }
+}
 
 @Composable
 internal fun LoadingState() {
